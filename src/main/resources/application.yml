@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: iAnalyze-API-GATEWAY
+  cloud:
+    circuitbreaker:
+      hystrix:
+        enabled: false
+#  cloud:
+#    circuitbreaker:
+#      hystrix:
+#        enabled: true
+#    loadbalancer:
+#      ribbon:
+#        enabled: true
+
+server:
+  port: 8765
+
+eureka:
+  client:
+#    register-with-eureka: false
+#    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+ribbon:
+  restclient:
+    enabled: true
+#    ReadTimeout: 190000
+#    ConnectionTimeout: 190000
+#    eureka:
+#      enabled: true
+  okhttp:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+
+
+
+zuul:
+#  host:
+#    socket-timeout-millis: 60000
+#    connect-timeout-millis: 60000
+
+
+  sensitive-headers: Cookie, Set-Cookie
+  ignored-services: '*'
+  routes:
+    auth-micro-service_users:
+      path: /api/users/**
+      serviceId: auth-micro-service
+      stripPrefix: false
+    bigdata-micro-service:
+        path: /api/batch/**
+        serviceId: iAnaylze-Big-Data
+        stripPrefix: false
+    sidecar-fraud-detection-service:
+        path: /api/fraud-detection/**
+        serviceId: sidecar-fraud-micro
+        stripPrefix: false
